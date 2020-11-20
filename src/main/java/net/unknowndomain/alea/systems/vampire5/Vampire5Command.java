@@ -29,6 +29,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.javacord.api.entity.message.MessageBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -36,6 +38,8 @@ import org.javacord.api.entity.message.MessageBuilder;
  */
 public class Vampire5Command extends RpgSystemCommand
 {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(Vampire5Command.class);
     private static final RpgSystemDescriptor DESC = new RpgSystemDescriptor("Vampire the Masquerade 5th Edition", "vt5", "vampire-5th");
     private static final String NUMBER_PARAM = "number";
     private static final String HUNGER_PARAM = "hunger";
@@ -106,6 +110,7 @@ public class Vampire5Command extends RpgSystemCommand
             {
                 return HelpWrapper.printHelp(prefixMatcher.group(CMD_NAME), CMD_OPTIONS, true);
             }
+            LOGGER.debug(cmdLine);
             try
             {
                 CommandLineParser parser = new DefaultParser();
