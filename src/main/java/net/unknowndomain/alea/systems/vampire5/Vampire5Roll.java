@@ -21,11 +21,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.unknowndomain.alea.dice.D10;
-import net.unknowndomain.alea.messages.MsgBuilder;
-import net.unknowndomain.alea.messages.MsgStyle;
-import net.unknowndomain.alea.messages.ReturnMsg;
+import net.unknowndomain.alea.dice.standard.D10;
 import net.unknowndomain.alea.pools.DicePool;
+import net.unknowndomain.alea.roll.GenericResult;
 import net.unknowndomain.alea.roll.GenericRoll;
 
 /**
@@ -88,7 +86,7 @@ public class Vampire5Roll implements GenericRoll
     }
     
     @Override
-    public ReturnMsg getResult()
+    public GenericResult getResult()
     {
         List<Integer> resultsPool = this.dicePool.getResults();
         List<Integer> hungerRes = this.hungerPool.getResults();
@@ -116,105 +114,9 @@ public class Vampire5Roll implements GenericRoll
             results2 = results;
             results = buildIncrements(res,hungerRes);
         }
-        return formatResults(results, results2);
-    }
-    
-    private ReturnMsg formatResults(Vampire5Results results, Vampire5Results results2)
-    {
-        MsgBuilder mb = new MsgBuilder();
-        
-        mb.append("Successes: ").append(results.getHits()).appendNewLine();
-        if (results.isHungerTen() || results.isHungerOne() || results.isCritical())
-        {
-            mb.append("Special descriptors: ( ");
-            if (results.isHungerTen() && results.isCritical())
-            {
-                mb.append("Messy Critical", MsgStyle.BOLD);
-            }
-            else if (results.isCritical())
-            {
-                mb.append("Critical Success", MsgStyle.BOLD);
-            }
-            if (results.isHungerOne())
-            {
-                if (results.isCritical())
-                {
-                    mb.append(" | ");
-                }
-                mb.append("Bestial Failures", MsgStyle.BOLD);
-            }
-            mb.append(" )").appendNewLine();
-        }
-        if (mods.contains(Modifiers.VERBOSE))
-        {
-            
-            if (!results.getNormalResults().isEmpty())
-            {
-                mb.append("Results: ").append(" [ ");
-                for (Integer t : results.getNormalResults())
-                {
-                    mb.append(t).append(" ");
-                }
-                mb.append("]\n");
-            }
-            if (!results.getHungerResults().isEmpty())
-            {
-                
-                mb.append("Hunger: ").append(" [ ");
-                for (Integer t : results.getHungerResults())
-                {
-                    mb.append(t).append(" ");
-                }
-                mb.append("]\n");
-            }
-            if (results2 != null)
-            {
-                mb.append("Prev : {\n");
-                mb.append("    Successes: ").append(results2.getHits()).appendNewLine();
-                if (results2.isHungerTen() || results2.isHungerOne() || results2.isCritical())
-                {
-                    mb.append("    Special descriptors: ( ");
-                    if (results2.isHungerTen() && results2.isCritical())
-                    {
-                        mb.append("Messy Critical", MsgStyle.ITALIC);
-                    }
-                    else if (results2.isCritical())
-                    {
-                        mb.append("Critical Success", MsgStyle.ITALIC);
-                    }
-                    if (results2.isHungerOne())
-                    {
-                        if (results2.isCritical())
-                        {
-                            mb.append(" | ");
-                        }
-                        mb.append("Bestial Failures", MsgStyle.ITALIC);
-                    }
-                    mb.append(" )").appendNewLine();
-                }
-                if (!results2.getNormalResults().isEmpty())
-                {
-                    mb.append("    Results: ").append(" [ ");
-                    for (Integer t : results2.getNormalResults())
-                    {
-                        mb.append(t).append(" ");
-                    }
-                    mb.append("]\n");
-                }
-                if (!results2.getHungerResults().isEmpty())
-                {
-
-                    mb.append("    Hunger: ").append(" [ ");
-                    for (Integer t : results2.getHungerResults())
-                    {
-                        mb.append(t).append(" ");
-                    }
-                    mb.append("]\n");
-                }
-                mb.append("}\n");
-            }
-        }
-        return mb.build();
+        results.setPrev(results2);
+        results.setVerbose(mods.contains(Modifiers.VERBOSE));
+        return results;
     }
     
     private Vampire5Results buildIncrements(List<Integer> res, List<Integer> hun)

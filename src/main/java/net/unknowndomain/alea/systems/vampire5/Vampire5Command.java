@@ -16,6 +16,7 @@
 package net.unknowndomain.alea.systems.vampire5;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import net.unknowndomain.alea.command.HelpWrapper;
 import net.unknowndomain.alea.messages.ReturnMsg;
@@ -104,20 +105,16 @@ public class Vampire5Command extends RpgSystemCommand
     }
     
     @Override
-    protected ReturnMsg safeCommand(String cmdName, String cmdParams)
+    protected Optional<GenericRoll> safeCommand(String cmdParams)
     {
-        ReturnMsg retVal;
-        if (cmdParams == null || cmdParams.isEmpty())
-        {
-            return HelpWrapper.printHelp(cmdName, CMD_OPTIONS, true);
-        }
+        Optional<GenericRoll> retVal;
         try
         {
             CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(CMD_OPTIONS, cmdParams.split(" "));
             if (cmd.hasOption(CMD_HELP))
             {
-                return HelpWrapper.printHelp(cmdName, CMD_OPTIONS, true);
+                return Optional.empty();
             }
 
             Set<Vampire5Roll.Modifiers> mods = new HashSet<>();
@@ -141,13 +138,19 @@ public class Vampire5Command extends RpgSystemCommand
             {
                 roll = new Vampire5Roll(Integer.parseInt(n), mods);
             }
-            retVal = roll.getResult();
+            retVal = Optional.of(roll);
         } 
         catch (ParseException | NumberFormatException ex)
         {
-            retVal = HelpWrapper.printHelp(cmdName, CMD_OPTIONS, true);
+            retVal = Optional.empty();
         }
         return retVal;
+    }
+    
+    @Override
+    public ReturnMsg getHelpMessage(String cmdName)
+    {
+        return HelpWrapper.printHelp(cmdName, CMD_OPTIONS, true);
     }
     
 }
