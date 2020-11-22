@@ -22,10 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.unknowndomain.alea.dice.D10;
+import net.unknowndomain.alea.messages.MsgBuilder;
+import net.unknowndomain.alea.messages.MsgStyle;
+import net.unknowndomain.alea.messages.ReturnMsg;
 import net.unknowndomain.alea.pools.DicePool;
 import net.unknowndomain.alea.roll.GenericRoll;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.MessageDecoration;
 
 /**
  *
@@ -87,7 +88,7 @@ public class Vampire5Roll implements GenericRoll
     }
     
     @Override
-    public MessageBuilder getResult()
+    public ReturnMsg getResult()
     {
         List<Integer> resultsPool = this.dicePool.getResults();
         List<Integer> hungerRes = this.hungerPool.getResults();
@@ -118,9 +119,9 @@ public class Vampire5Roll implements GenericRoll
         return formatResults(results, results2);
     }
     
-    private MessageBuilder formatResults(Vampire5Results results, Vampire5Results results2)
+    private ReturnMsg formatResults(Vampire5Results results, Vampire5Results results2)
     {
-        MessageBuilder mb = new MessageBuilder();
+        MsgBuilder mb = new MsgBuilder();
         
         mb.append("Successes: ").append(results.getHits()).appendNewLine();
         if (results.isHungerTen() || results.isHungerOne() || results.isCritical())
@@ -128,11 +129,11 @@ public class Vampire5Roll implements GenericRoll
             mb.append("Special descriptors: ( ");
             if (results.isHungerTen() && results.isCritical())
             {
-                mb.append("Messy Critical", MessageDecoration.BOLD);
+                mb.append("Messy Critical", MsgStyle.BOLD);
             }
             else if (results.isCritical())
             {
-                mb.append("Critical Success", MessageDecoration.BOLD);
+                mb.append("Critical Success", MsgStyle.BOLD);
             }
             if (results.isHungerOne())
             {
@@ -140,7 +141,7 @@ public class Vampire5Roll implements GenericRoll
                 {
                     mb.append(" | ");
                 }
-                mb.append("Bestial Failures", MessageDecoration.BOLD);
+                mb.append("Bestial Failures", MsgStyle.BOLD);
             }
             mb.append(" )").appendNewLine();
         }
@@ -175,11 +176,11 @@ public class Vampire5Roll implements GenericRoll
                     mb.append("    Special descriptors: ( ");
                     if (results2.isHungerTen() && results2.isCritical())
                     {
-                        mb.append("Messy Critical", MessageDecoration.ITALICS);
+                        mb.append("Messy Critical", MsgStyle.ITALIC);
                     }
                     else if (results2.isCritical())
                     {
-                        mb.append("Critical Success", MessageDecoration.ITALICS);
+                        mb.append("Critical Success", MsgStyle.ITALIC);
                     }
                     if (results2.isHungerOne())
                     {
@@ -187,7 +188,7 @@ public class Vampire5Roll implements GenericRoll
                         {
                             mb.append(" | ");
                         }
-                        mb.append("Bestial Failures", MessageDecoration.ITALICS);
+                        mb.append("Bestial Failures", MsgStyle.ITALIC);
                     }
                     mb.append(" )").appendNewLine();
                 }
@@ -213,7 +214,7 @@ public class Vampire5Roll implements GenericRoll
                 mb.append("}\n");
             }
         }
-        return mb;
+        return mb.build();
     }
     
     private Vampire5Results buildIncrements(List<Integer> res, List<Integer> hun)
