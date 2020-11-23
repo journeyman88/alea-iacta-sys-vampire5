@@ -54,7 +54,6 @@ public class Vampire5Command extends RpgSystemCommand
                         .longOpt(NUMBER_PARAM)
                         .desc("Number of dice in the pool")
                         .hasArg()
-                        .required()
                         .argName("diceNumber")
                         .build()
         );
@@ -117,26 +116,30 @@ public class Vampire5Command extends RpgSystemCommand
                 return Optional.empty();
             }
 
-            Set<Vampire5Roll.Modifiers> mods = new HashSet<>();
+            Set<Vampire5Modifiers> mods = new HashSet<>();
 
-            if (cmd.hasOption(REROLL_PARAM))
-            {
-                mods.add(Vampire5Roll.Modifiers.REROLL);
-            }
             if (cmd.hasOption(CMD_VERBOSE))
             {
-                mods.add(Vampire5Roll.Modifiers.VERBOSE);
+                mods.add(Vampire5Modifiers.VERBOSE);
             }
-            String n = cmd.getOptionValue(NUMBER_PARAM);
             GenericRoll roll;
-            if (cmd.hasOption(HUNGER_PARAM))
+            if (cmd.hasOption(REROLL_PARAM))
             {
-                String l = cmd.getOptionValue(HUNGER_PARAM);
-                roll = new Vampire5Roll(Integer.parseInt(n), Integer.parseInt(l), mods);
+                mods.add(Vampire5Modifiers.REROLL);
+                roll = new Vampire5Reroll(mods);
             }
             else
             {
-                roll = new Vampire5Roll(Integer.parseInt(n), mods);
+                String n = cmd.getOptionValue(NUMBER_PARAM);
+                if (cmd.hasOption(HUNGER_PARAM))
+                {
+                    String l = cmd.getOptionValue(HUNGER_PARAM);
+                    roll = new Vampire5Roll(Integer.parseInt(n), Integer.parseInt(l), mods);
+                }
+                else
+                {
+                    roll = new Vampire5Roll(Integer.parseInt(n), mods);
+                }
             }
             retVal = Optional.of(roll);
         } 

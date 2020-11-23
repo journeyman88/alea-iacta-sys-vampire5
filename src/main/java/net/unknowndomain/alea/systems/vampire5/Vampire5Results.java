@@ -151,7 +151,7 @@ public class Vampire5Results extends GenericResult
         }
         if (verbose)
         {
-            
+            messageBuilder.append(indent).append("Roll ID: ").append(getUuid()).appendNewLine();
             if (!getNormalResults().isEmpty())
             {
                 messageBuilder.append(indent).append("Results: ").append(" [ ");
