@@ -175,7 +175,7 @@ public class Vampire5Results extends GenericResult
             {
                 messageBuilder.append(indent).append("Prev : {\n");
                 prev.formatResults(messageBuilder, verbose, indentValue + 4);
-                messageBuilder.append("}\n");
+                messageBuilder.append(indent).append("}\n");
             }
         }
     }

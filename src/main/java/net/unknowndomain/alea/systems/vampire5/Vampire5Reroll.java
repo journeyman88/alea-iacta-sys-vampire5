@@ -50,6 +50,8 @@ public class Vampire5Reroll extends Vampire5Base implements StatefulRoll
         Vampire5Results results2 = null;
         if (mods.contains(Vampire5Modifiers.REROLL) && (results.getMiss() > 0) )
         {
+            List<Integer> hun = new ArrayList<>(prev.getHungerResults().size());
+            hun.addAll(prev.getHungerResults());
             int reroll = results.getMiss();
             if (reroll > 3)
             {
@@ -63,13 +65,14 @@ public class Vampire5Reroll extends Vampire5Base implements StatefulRoll
             }
             res.addAll(rerollPool.getResults());
             results2 = results;
-            results = buildIncrements(res,prev.getHungerResults());
+            results = buildIncrements(res,hun);
         }
         results.setPrev(results2);
         results.setVerbose(mods.contains(Vampire5Modifiers.VERBOSE));
         return results;
     }
     
+    @Override
     public boolean loadState(GenericResult state)
     {
         boolean retVal = false;
