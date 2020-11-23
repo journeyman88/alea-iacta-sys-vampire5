@@ -178,7 +178,6 @@ public class Vampire5Results extends GenericResult
                 messageBuilder.append("}\n");
             }
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Vampire5Results getPrev()
