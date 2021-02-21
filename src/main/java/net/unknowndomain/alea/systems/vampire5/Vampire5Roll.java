@@ -38,9 +38,9 @@ public class Vampire5Roll extends Vampire5Base
         this(dice, Arrays.asList(mod));
     }
     
-    public Vampire5Roll(Integer trait, Integer limit, Vampire5Modifiers ... mod)
+    public Vampire5Roll(Integer dice, Integer hunger, Vampire5Modifiers ... mod)
     {
-        this(trait, limit, Arrays.asList(mod));
+        this(dice, hunger, Arrays.asList(mod));
     }
     
     public Vampire5Roll(Integer dice, Collection<Vampire5Modifiers> mod)

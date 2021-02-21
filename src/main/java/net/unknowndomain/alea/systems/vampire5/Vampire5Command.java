@@ -16,19 +16,13 @@
 package net.unknowndomain.alea.systems.vampire5;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import net.unknowndomain.alea.command.HelpWrapper;
-import net.unknowndomain.alea.messages.ReturnMsg;
 import net.unknowndomain.alea.systems.RpgSystemCommand;
 import net.unknowndomain.alea.systems.RpgSystemDescriptor;
 import net.unknowndomain.alea.roll.GenericRoll;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import net.unknowndomain.alea.systems.RpgSystemOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,50 +35,6 @@ public class Vampire5Command extends RpgSystemCommand
     
     private static final Logger LOGGER = LoggerFactory.getLogger(Vampire5Command.class);
     private static final RpgSystemDescriptor DESC = new RpgSystemDescriptor("Vampire the Masquerade 5th Edition", "vt5", "vampire-5th");
-    private static final String NUMBER_PARAM = "number";
-    private static final String HUNGER_PARAM = "hunger";
-    private static final String REROLL_PARAM = "reroll";
-    
-    private static final Options CMD_OPTIONS;
-    
-    static{
-        CMD_OPTIONS = new Options();
-        CMD_OPTIONS.addOption(
-                Option.builder("n")
-                        .longOpt(NUMBER_PARAM)
-                        .desc("Number of dice in the pool")
-                        .hasArg()
-                        .argName("diceNumber")
-                        .build()
-        );
-        CMD_OPTIONS.addOption(
-                Option.builder("u")
-                        .longOpt(HUNGER_PARAM)
-                        .desc("Hunger value")
-                        .hasArg()
-                        .argName("hungerValue")
-                        .build()
-        );
-        CMD_OPTIONS.addOption(
-                Option.builder("r")
-                        .longOpt(REROLL_PARAM)
-                        .desc("Enable Will usage for reroll")
-                        .build()
-        );
-        
-        CMD_OPTIONS.addOption(
-                Option.builder("h")
-                        .longOpt( CMD_HELP )
-                        .desc( "Print help")
-                        .build()
-        );
-        CMD_OPTIONS.addOption(
-                Option.builder("v")
-                        .longOpt(CMD_VERBOSE)
-                        .desc("Enable verbose output")
-                        .build()
-        );
-    };
     
     public Vampire5Command()
     {
@@ -102,58 +52,36 @@ public class Vampire5Command extends RpgSystemCommand
     {
         return LOGGER;
     }
-    
+
     @Override
-    protected Optional<GenericRoll> safeCommand(String cmdParams)
+    protected Optional<GenericRoll> safeCommand(RpgSystemOptions options, Locale lang)
     {
         Optional<GenericRoll> retVal;
-        try
-        {
-            CommandLineParser parser = new DefaultParser();
-            CommandLine cmd = parser.parse(CMD_OPTIONS, cmdParams.split(" "));
-            if (cmd.hasOption(CMD_HELP))
-            {
-                return Optional.empty();
-            }
-
-            Set<Vampire5Modifiers> mods = new HashSet<>();
-
-            if (cmd.hasOption(CMD_VERBOSE))
-            {
-                mods.add(Vampire5Modifiers.VERBOSE);
-            }
-            GenericRoll roll;
-            if (cmd.hasOption(REROLL_PARAM))
-            {
-                mods.add(Vampire5Modifiers.REROLL);
-                roll = new Vampire5Reroll(mods);
-            }
-            else
-            {
-                String n = cmd.getOptionValue(NUMBER_PARAM);
-                if (cmd.hasOption(HUNGER_PARAM))
-                {
-                    String l = cmd.getOptionValue(HUNGER_PARAM);
-                    roll = new Vampire5Roll(Integer.parseInt(n), Integer.parseInt(l), mods);
-                }
-                else
-                {
-                    roll = new Vampire5Roll(Integer.parseInt(n), mods);
-                }
-            }
-            retVal = Optional.of(roll);
-        } 
-        catch (ParseException | NumberFormatException ex)
+        if (options.isHelp() || !(options instanceof Vampire5Options) )
         {
             retVal = Optional.empty();
         }
+        else
+        {
+            Vampire5Options opt = (Vampire5Options) options;
+            GenericRoll roll;
+            if (opt.isWillReroll())
+            {
+                roll = new Vampire5Reroll(opt.getModifiers());
+            }
+            else
+            {
+                roll = new Vampire5Roll(opt.getDiceNumber(), opt.getHungerValue(), opt.getModifiers());
+            }
+            retVal = Optional.of(roll);
+        }
         return retVal;
     }
-    
+
     @Override
-    public ReturnMsg getHelpMessage(String cmdName)
+    public RpgSystemOptions buildOptions()
     {
-        return HelpWrapper.printHelp(cmdName, CMD_OPTIONS, true);
+        return new Vampire5Options();
     }
     
 }
