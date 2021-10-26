@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import net.unknowndomain.alea.dice.standard.D10;
-import net.unknowndomain.alea.pools.DicePool;
+import net.unknowndomain.alea.random.SingleResult;
+import net.unknowndomain.alea.random.dice.DicePool;
+import net.unknowndomain.alea.random.dice.bag.D10;
 import net.unknowndomain.alea.roll.GenericResult;
 import net.unknowndomain.alea.roll.StatefulRoll;
 
@@ -50,7 +51,7 @@ public class Vampire5Reroll extends Vampire5Base implements StatefulRoll
         Vampire5Results results2 = null;
         if (mods.contains(Vampire5Modifiers.REROLL) && (results.getMiss() > 0) )
         {
-            List<Integer> hun = new ArrayList<>(prev.getHungerResults().size());
+            List<SingleResult<Integer>> hun = new ArrayList<>(prev.getHungerResults().size());
             hun.addAll(prev.getHungerResults());
             int reroll = results.getMiss();
             if (reroll > 3)
@@ -58,7 +59,7 @@ public class Vampire5Reroll extends Vampire5Base implements StatefulRoll
                 reroll = 3;
             }
             DicePool<D10> rerollPool = new DicePool<>(D10.INSTANCE, reroll);
-            List<Integer> res = new ArrayList<>();
+            List<SingleResult<Integer>> res = new ArrayList<>();
             for (int i = 0; i < prev.getNormalResults().size() - reroll; i++)
             {
                 res.add(prev.getNormalResults().get(i));

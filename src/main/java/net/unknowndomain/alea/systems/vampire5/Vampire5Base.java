@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.unknowndomain.alea.random.SingleResult;
+import net.unknowndomain.alea.random.SingleResultComparator;
 import net.unknowndomain.alea.roll.GenericRoll;
 
 /**
@@ -36,26 +38,21 @@ public abstract class Vampire5Base implements GenericRoll
         this.mods.addAll(mod);
     }
 
-    protected Vampire5Results buildIncrements(List<Integer> res, List<Integer> hun)
+    protected Vampire5Results buildIncrements(List<SingleResult<Integer>> res, List<SingleResult<Integer>> hun)
     {
-        res.sort((Integer o1, Integer o2) ->
-        {
-            return -1 * o1.compareTo(o2);
-        });
-        hun.sort((Integer o1, Integer o2) ->
-        {
-            return -1 * o1.compareTo(o2);
-        });
+        SingleResultComparator<Integer> comp = new SingleResultComparator<>(true);
+        res.sort(comp);
+        hun.sort(comp);
         Vampire5Results results = new Vampire5Results(res, hun);
         int tenCount = 0;
         int max = res.size();
         for (int i = 0; i < max; i++)
         {
-            int temp = res.remove(0);
-            if (temp >= 6)
+            SingleResult<Integer> temp = res.remove(0);
+            if (temp.getValue() >= 6)
             {
                 results.addHit(temp);
-                if (temp >= 10)
+                if (temp.getValue() >= 10)
                 {
                     tenCount++;
                 }
@@ -72,16 +69,16 @@ public abstract class Vampire5Base implements GenericRoll
         max = hun.size();
         for (int i = 0; i < max; i++)
         {
-            int temp = hun.remove(0);
-            if (temp >= 6)
+            SingleResult<Integer> temp = hun.remove(0);
+            if (temp.getValue() >= 6)
             {
                 results.addHit(temp);
             }
-            if (temp <= 1)
+            if (temp.getValue() <= 1)
             {
                 results.setHungerOne(true);
             }
-            if (temp >= 10)
+            if (temp.getValue() >= 10)
             {
                 results.setHungerTen(true);
                 tenCount++;

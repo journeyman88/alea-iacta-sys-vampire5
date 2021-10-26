@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import net.unknowndomain.alea.messages.MsgBuilder;
 import net.unknowndomain.alea.messages.MsgStyle;
+import net.unknowndomain.alea.random.SingleResult;
 import net.unknowndomain.alea.roll.GenericResult;
 
 /**
@@ -28,19 +29,19 @@ import net.unknowndomain.alea.roll.GenericResult;
  */
 public class Vampire5Results extends GenericResult
 {
-    private final List<Integer> normalResults;
-    private final List<Integer> hungerResults;
+    private final List<SingleResult<Integer>> normalResults;
+    private final List<SingleResult<Integer>> hungerResults;
     private int hits = 0;
     private int miss = 0;
     private boolean critical = false;
     private boolean hungerOne = false;
     private boolean hungerTen = false;
-    private List<Integer> hitResults = new ArrayList<>();
+    private List<SingleResult<Integer>> hitResults = new ArrayList<>();
     private Vampire5Results prev;
     
-    public Vampire5Results(List<Integer> results, List<Integer> hunger)
+    public Vampire5Results(List<SingleResult<Integer>> results, List<SingleResult<Integer>> hunger)
     {
-        List<Integer> tmp = new ArrayList<>(results.size());
+        List<SingleResult<Integer>> tmp = new ArrayList<>(results.size());
         tmp.addAll(results);
         this.normalResults = Collections.unmodifiableList(tmp);
         tmp = new ArrayList<>(hunger.size());
@@ -59,12 +60,12 @@ public class Vampire5Results extends GenericResult
         miss++;
     }
     
-    public void addHit(Integer dice)
+    public void addHit(SingleResult<Integer> dice)
     {
         addHits(1, dice);
     }
     
-    private void addHits(int value, Integer dice)
+    private void addHits(int value, SingleResult<Integer> dice)
     {
         hits += value;
         if (dice != null)
@@ -78,17 +79,17 @@ public class Vampire5Results extends GenericResult
         return hits;
     }
 
-    public List<Integer> getNormalResults()
+    public List<SingleResult<Integer>> getNormalResults()
     {
         return normalResults;
     }
 
-    public List<Integer> getHitResults()
+    public List<SingleResult<Integer>> accessHitResults()
     {
         return hitResults;
     }
 
-    public List<Integer> getHungerResults()
+    public List<SingleResult<Integer>> getHungerResults()
     {
         return hungerResults;
     }
@@ -155,9 +156,10 @@ public class Vampire5Results extends GenericResult
             if (!getNormalResults().isEmpty())
             {
                 messageBuilder.append(indent).append("Results: ").append(" [ ");
-                for (Integer t : getNormalResults())
+                for (SingleResult<Integer> t : getNormalResults())
                 {
-                    messageBuilder.append(t).append(" ");
+                    messageBuilder.append("( ").append(t.getLabel()).append(" => ");
+                    messageBuilder.append(t.getValue()).append(") ");
                 }
                 messageBuilder.append("]\n");
             }
@@ -165,9 +167,10 @@ public class Vampire5Results extends GenericResult
             {
                 
                 messageBuilder.append(indent).append("Hunger: ").append(" [ ");
-                for (Integer t : getHungerResults())
+                for (SingleResult<Integer> t : getHungerResults())
                 {
-                    messageBuilder.append(t).append(" ");
+                    messageBuilder.append("( ").append(t.getLabel()).append(" => ");
+                    messageBuilder.append(t.getValue()).append(") ");
                 }
                 messageBuilder.append("]\n");
             }
