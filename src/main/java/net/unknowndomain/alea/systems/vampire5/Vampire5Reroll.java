@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import net.unknowndomain.alea.random.SingleResult;
 import net.unknowndomain.alea.random.dice.DicePool;
 import net.unknowndomain.alea.random.dice.bag.D10;
@@ -34,14 +35,14 @@ public class Vampire5Reroll extends Vampire5Base implements StatefulRoll
     
     private Vampire5Results prev;
     
-    public Vampire5Reroll(Vampire5Modifiers ... mod)
+    public Vampire5Reroll(Locale lang, Vampire5Modifiers ... mod)
     {
-        this(Arrays.asList(mod));
+        this(lang, Arrays.asList(mod));
     }
     
-    public Vampire5Reroll(Collection<Vampire5Modifiers> mod)
+    public Vampire5Reroll(Locale lang, Collection<Vampire5Modifiers> mod)
     {
-        super(mod);
+        super(lang, mod);
     }
     
     @Override

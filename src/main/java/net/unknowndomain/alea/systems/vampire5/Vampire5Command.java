@@ -15,10 +15,8 @@
  */
 package net.unknowndomain.alea.systems.vampire5;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 import net.unknowndomain.alea.systems.RpgSystemCommand;
 import net.unknowndomain.alea.systems.RpgSystemDescriptor;
 import net.unknowndomain.alea.roll.GenericRoll;
@@ -67,11 +65,11 @@ public class Vampire5Command extends RpgSystemCommand
             GenericRoll roll;
             if (opt.isWillReroll())
             {
-                roll = new Vampire5Reroll(opt.getModifiers());
+                roll = new Vampire5Reroll(lang, opt.getModifiers());
             }
             else
             {
-                roll = new Vampire5Roll(opt.getDiceNumber(), opt.getHungerValue(), opt.getModifiers());
+                roll = new Vampire5Roll(lang, opt.getDiceNumber(), opt.getHungerValue(), opt.getModifiers());
             }
             retVal = Optional.of(roll);
         }

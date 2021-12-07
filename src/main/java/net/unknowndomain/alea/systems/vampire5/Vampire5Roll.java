@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import net.unknowndomain.alea.random.SingleResult;
 import net.unknowndomain.alea.random.dice.DicePool;
 import net.unknowndomain.alea.random.dice.bag.D10;
@@ -34,24 +35,24 @@ public class Vampire5Roll extends Vampire5Base
     private final DicePool<D10> dicePool;
     private final DicePool<D10> hungerPool;
     
-    public Vampire5Roll(Integer dice, Vampire5Modifiers ... mod)
+    public Vampire5Roll(Locale lang,Integer dice, Vampire5Modifiers ... mod)
     {
-        this(dice, Arrays.asList(mod));
+        this(lang, dice, Arrays.asList(mod));
     }
     
-    public Vampire5Roll(Integer dice, Integer hunger, Vampire5Modifiers ... mod)
+    public Vampire5Roll(Locale lang, Integer dice, Integer hunger, Vampire5Modifiers ... mod)
     {
-        this(dice, hunger, Arrays.asList(mod));
+        this(lang, dice, hunger, Arrays.asList(mod));
     }
     
-    public Vampire5Roll(Integer dice, Collection<Vampire5Modifiers> mod)
+    public Vampire5Roll(Locale lang, Integer dice, Collection<Vampire5Modifiers> mod)
     {
-        this(dice, null, mod);
+        this(lang, dice, null, mod);
     }
     
-    public Vampire5Roll(Integer dice, Integer hunger, Collection<Vampire5Modifiers> mod)
+    public Vampire5Roll(Locale lang, Integer dice, Integer hunger, Collection<Vampire5Modifiers> mod)
     {
-        super(mod);
+        super(lang, mod);
         int ds, dh;
         if (hunger != null)
         {

@@ -18,6 +18,7 @@ package net.unknowndomain.alea.systems.vampire5;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import net.unknowndomain.alea.random.SingleResult;
 import net.unknowndomain.alea.random.SingleResultComparator;
@@ -29,13 +30,14 @@ import net.unknowndomain.alea.roll.GenericRoll;
  */
 public abstract class Vampire5Base implements GenericRoll
 {
-    
+    private final Locale lang;
     protected final Set<Vampire5Modifiers> mods;
 
-    public Vampire5Base(Collection<Vampire5Modifiers> mod)
+    public Vampire5Base(Locale lang, Collection<Vampire5Modifiers> mod)
     {
         this.mods = new HashSet<>();
         this.mods.addAll(mod);
+        this.lang = lang;
     }
 
     protected Vampire5Results buildIncrements(List<SingleResult<Integer>> res, List<SingleResult<Integer>> hun)

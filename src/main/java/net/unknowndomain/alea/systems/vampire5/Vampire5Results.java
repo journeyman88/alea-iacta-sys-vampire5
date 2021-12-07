@@ -21,14 +21,16 @@ import java.util.List;
 import net.unknowndomain.alea.messages.MsgBuilder;
 import net.unknowndomain.alea.messages.MsgStyle;
 import net.unknowndomain.alea.random.SingleResult;
-import net.unknowndomain.alea.roll.GenericResult;
+import net.unknowndomain.alea.roll.LocalizedResult;
 
 /**
  *
  * @author journeyman
  */
-public class Vampire5Results extends GenericResult
+public class Vampire5Results extends LocalizedResult
 {
+    private final static String BUNDLE_NAME = "net.unknowndomain.alea.systems.vampire5.RpgSystemBundle";
+    
     private final List<SingleResult<Integer>> normalResults;
     private final List<SingleResult<Integer>> hungerResults;
     private int hits = 0;
@@ -128,17 +130,17 @@ public class Vampire5Results extends GenericResult
     protected void formatResults(MsgBuilder messageBuilder, boolean verbose, int indentValue)
     {
         String indent = getIndent(indentValue);
-        messageBuilder.append(indent).append("Successes: ").append(getHits()).appendNewLine();
+        messageBuilder.append(indent).append(translate("vampire5.results.successes", getHits())).appendNewLine();
         if (isHungerTen() || isHungerOne() || isCritical())
         {
-            messageBuilder.append(indent).append("Special descriptors: ( ");
+            messageBuilder.append(indent).append(translate("vampire5.results.specialDescriptors")).append("( ");
             if (isHungerTen() && isCritical())
             {
-                messageBuilder.append("Messy Critical", MsgStyle.BOLD);
+                messageBuilder.append(translate("vampire5.results.messyCritical"), MsgStyle.BOLD);
             }
             else if (isCritical())
             {
-                messageBuilder.append("Critical Success", MsgStyle.BOLD);
+                messageBuilder.append(translate("vampire5.results.critical"), MsgStyle.BOLD);
             }
             if (isHungerOne())
             {
@@ -146,7 +148,7 @@ public class Vampire5Results extends GenericResult
                 {
                     messageBuilder.append(" | ");
                 }
-                messageBuilder.append("Bestial Failures", MsgStyle.BOLD);
+                messageBuilder.append(translate("vampire5.results.bestialFailure"), MsgStyle.BOLD);
             }
             messageBuilder.append(" )").appendNewLine();
         }
@@ -155,7 +157,7 @@ public class Vampire5Results extends GenericResult
             messageBuilder.append(indent).append("Roll ID: ").append(getUuid()).appendNewLine();
             if (!getNormalResults().isEmpty())
             {
-                messageBuilder.append(indent).append("Results: ").append(" [ ");
+                messageBuilder.append(indent).append(translate("vampire5.results.normalResults")).append(" [ ");
                 for (SingleResult<Integer> t : getNormalResults())
                 {
                     messageBuilder.append("( ").append(t.getLabel()).append(" => ");
@@ -165,8 +167,7 @@ public class Vampire5Results extends GenericResult
             }
             if (!getHungerResults().isEmpty())
             {
-                
-                messageBuilder.append(indent).append("Hunger: ").append(" [ ");
+                messageBuilder.append(indent).append(translate("vampire5.results.hungerResults")).append(" [ ");
                 for (SingleResult<Integer> t : getHungerResults())
                 {
                     messageBuilder.append("( ").append(t.getLabel()).append(" => ");
@@ -176,7 +177,7 @@ public class Vampire5Results extends GenericResult
             }
             if (prev != null)
             {
-                messageBuilder.append(indent).append("Prev : {\n");
+                messageBuilder.append(indent).append(translate("vampire5.results.prevResults")).append("{\n");
                 prev.formatResults(messageBuilder, verbose, indentValue + 4);
                 messageBuilder.append(indent).append("}\n");
             }
@@ -191,6 +192,12 @@ public class Vampire5Results extends GenericResult
     public void setPrev(Vampire5Results prev)
     {
         this.prev = prev;
+    }
+
+    @Override
+    protected String getBundleName()
+    {
+        return BUNDLE_NAME;
     }
 
 }
