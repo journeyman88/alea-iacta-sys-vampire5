@@ -91,6 +91,7 @@ public abstract class Vampire5Base implements GenericRoll
                 tenCount = 0;
             }
         }
+        results.setLang(lang);
         return results;
     }
     
